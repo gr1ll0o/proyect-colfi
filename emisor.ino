@@ -1,11 +1,13 @@
-int led = 3;
+int led = 6;
 int brillo;
-String texto = "01000001";
-
+String texto = "010000011";
+//entrada del enter
+std::cout << "Nombre: "
 void setup() {
   // put your setup code here, to run once:
-  pinMode(3, OUTPUT);
+  pinMode(led, OUTPUT);
   Serial.begin(9600);
+
 }
 
 void loop() {
@@ -18,11 +20,10 @@ void loop() {
     char c = texto.charAt(i); // Obtiene el carácter en la posición i
     Serial.print("Caracter: ");
     Serial.println(c);
-
-    if (c == 0) {
-      analogWrite(led, 20);
+    if (c == '0') {
+      analogWrite(led, 70);
     }
-    if (c== 1){
+    if (c== '1'){
       analogWrite(led, 255);
     }
     delay(500);
