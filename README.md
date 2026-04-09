@@ -9,7 +9,7 @@ El sistema consiste en:
 - Un Arduino receptor que detecta los cambios de luz usando un fototransistor y reconstruye la señal recibida.
 
 Este proyecto fue desarrollado como parte de una feria de ciencias, con el objetivo de demostrar cómo la luz visible puede utilizarse como medio de comunicación.
-### ⚙️ Componentes necesarios
+## ⚙️ Componentes necesarios
 - Transmisor.
 - 2x Arduino (UNO, Nano, etc.).
 - 1x LED.
@@ -17,13 +17,13 @@ Este proyecto fue desarrollado como parte de una feria de ciencias, con el objet
 - Cables.
 - 1x Fototransistor.
 - 1x Resistencia (10kΩ recomendada).
-### 🔌 Esquema básico
+## 🔌 Esquema básico
 - #### Transmisor 
   LED conectado a un pin analógico del Arduino.
 - #### Receptor
   Fototransistor (lectura de la intensidad de luz del led)
 
-### 🚀 Funcionamiento
+## 🚀 Funcionamiento
 El Arduino transmisor convierte datos en una secuencia binaria (1s y 0s)
 y la reproduce en el LED secuencialmente variando su intensidad según corresponda. Si el LED está prendido al 100%, está enviando 1. Si el led
 está prendido al 25-30%, está enviando 0. Si está totalmente apagado está
@@ -33,13 +33,13 @@ El Arduino receptor esperará señales de este transmisor y las decodificará
 en texto legible, tomando las pausas necesarias para leer el mensaje enviado
 por el transmisor. Mostrará finalmente el texto enviado.
 
-### 💻 Código
+## 💻 Código
 El repositorio incluye:
 
 `emisor.ino` → Código del Arduino transmisor\
 `receptor.ino` → Código del Arduino receptor
 
-### 📊 ¿Qué se puede mejorar?
+## 📊 ¿Qué se puede mejorar?
 Buscamos incentivar este concepto e idea a través de una simulación
 a baja escala, para esto, se construye el proyecto con la intención de
 abrir paso a:
@@ -49,7 +49,7 @@ abrir paso a:
 - Filtrar ruido de luz ambiente
 - Transmitir textos extensos y/o datos de programa
 
-### 🌟 Aplicaciones del Li-Fi
+## 🌟 Aplicaciones del Li-Fi
 - Comunicación inalámbrica en entornos donde el Wi-Fi no es viable
 - Redes seguras (la luz no atraviesa paredes)
 - Internet de alta velocidad mediante iluminación LED
