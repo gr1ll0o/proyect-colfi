@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>optiNet. - Proyecto li-fi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Estilos generales y reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body, html {
+            height: 100%;
+            background-color: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+            scroll-behavior: smooth; /* Para el movimiento suave entre secciones */
+        }
+
+        /* Capa de fondo para el efecto Parallax de puntos */
+        #parallax-dots {
+            position: fixed;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            /* Patrón de puntos usando gradientes radiales */
+            background-image: radial-gradient(rgba(255, 255, 255, 0.4) 1.5px, transparent 1.5px);
+            background-size: 25px 25px;
+            /* Máscara para que los puntos solo se vean arriba y se difuminen hacia abajo */
+            -webkit-mask-image: radial-gradient(ellipse at top, black 0%, transparent 60%);
+            mask-image: radial-gradient(ellipse at top, black 0%, transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Hexágonos decorativos (Simplificados con CSS pseudo-elementos) */
+        .hex-bg {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 300px;
+            height: 100vh;
+            background-image: url('data:image/svg+xml;utf8,<svg width="60" height="103.923" viewBox="0 0 60 103.923" xmlns="http://www.w3.org/2000/svg"><path d="M30 0l25.98 15v30L30 60 4.02 45V15z" stroke="rgba(255,255,255,0.2)" stroke-width="1" fill="none"/></svg>');
+            z-index: 0;
+            pointer-events: none;
+        }
+        .hex-bg.left { left: -100px; }
+        .hex-bg.right { right: -100px; }
+
+        /* Contenedor principal de las secciones */
+        .sections-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Estilo de cada sección (para probar la navegación) */
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 100px; /* Espacio para la barra de navegación */
+        }
+
+        /* Estilos específicos del Logo */
+        .logo-container {
+            text-align: center;
+            user-select: none;
+        }
+
+        .logo {
+            font-size: 5rem;
+            font-weight: 400;
+            letter-spacing: -2px;
+            margin-bottom: 5px;
+        }
+
+        .logo .bold {
+            font-weight: 700;
+        }
+
+        .logo .dot {
+            color: #FFD700; /* Punto amarillo */
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            color: #cccccc;
+        }
+
+        /* Barra de navegación inferior (Dock) */
+        .dock {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #ffffff;
+            padding: 10px 25px;
+            border-radius: 50px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* Íconos del Dock */
+        .dock a {
+            color: #000000;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        /* Efecto de agrandado al pasar el mouse (Hover) */
+        .dock a:hover {
+            transform: scale(1.4); /* Agranda el ícono */
+            color: #444; /* Cambia levemente el color */
+        }
+        
+        /* Puntitos blancos al lado de la barra */
+        .dock::before, .dock::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: #fff;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .dock::before { left: -20px; }
+        .dock::after { right: -20px; }
+
+    </style>
+</head>
+<body>
+
+    <div id="parallax-dots"></div>
+    <div class="hex-bg left"></div>
+    <div class="hex-bg right"></div>
+
+    <div class="sections-container">
+        
+        <section id="inicio">
+            <div class="logo-container">
+                <h1 class="logo">opti<span class="bold">Net</span><span class="dot">.</span></h1>
+                <p class="subtitle">Proyecto li-fi</p>
+            </div>
+
+        </section>
+        <section id="informacion">
+            <h2>Sección de Información</h2>
+            <p style="text-align: center; color: #888; margin-top: 16px; font-size: 1.2em;">
+            Este proyecto busca demostrar un sistema básico de comunicación Li-Fi (Light Fidelity) utilizando dos placas Arduino. <br> 
+            La transmisión de datos se realiza mediante la modulación de la luz de un LED, mientras que la recepción se lleva a cabo con un fototransistor. <br>
+            Este proyecto a pequeña escala pretende servir como ejemplo y referencia a posibles avances con respecto a esta tecnología.<br> <br>
+
+        </p>
+
+        </section>
+        
+        <section id="usuario">
+            <h2>Perfiles de Usuario</h2>
+
+        </section>
+
+        <section id="archivos">
+            <h2>Directorio de Archivos</h2>
+
+        </section>
+
+        <section id="Creacion">
+            <h2>Ajustes del Sistema</h2>
+            <p style="text-align: center; color: #888; margin-top: 16px; font-size: 1.2em;">
+            Un Arduino transmisor que envía información encendiendo y apagando un LED en una secuencia específica (código binario).<br>
+            Un Arduino receptor que detecta los cambios de luz usando un fototransistor y reconstruye la señal recibida.<br>
+            Este proyecto fue desarrollado como parte de una feria de ciencias, con el objetivo de demostrar cómo la luz visible puede utilizarse <br> 
+            como medio de comunicación. 
+        <br><br> ════════════════════════════════════════ <br><br>
+            ⚙️ Componentes necesarios: <br>
+            Transmisor. ┃ 2x Arduino (UNO, Nano, etc.). ┃ 1x LED. ┃ 1x Resistencia (220Ω o 330Ω). <br>
+            Cables. ┃ 1x Fototransistor. ┃ 1x Resistencia (10kΩ recomendada).
+        <br><br> ════════════════════════════════════════ <br><br>
+            🔌 Esquema básico <br>
+                Transmisor ┃ LED conectado a un pin analógico del Arduino. ┃ Receptor <br>
+                Fototransistor (lectura de la intensidad de luz del led)
+        <br><br> ════════════════════════════════════════ <br><br>
+            🚀 Funcionamiento <br>
+                El Arduino transmisor convierte datos en una secuencia binaria (1s y 0s) <br>
+                y la reproduce en el LED secuencialmente variando su intensidad según corresponda. <br>
+                Si el LED está prendido al 100%, está enviando 1. Si el led está prendido al 25-30%,<br>
+                está enviando 0. Si está totalmente apagado está enviando una pausa o apagado.<br>
+                El Arduino receptor esperará señales de este transmisor y las decodificará en texto legible, <br>
+                Tomando las pausas necesarias para leer el mensaje enviado por el transmisor. Mostrará finalmente el texto enviado.
+        <br><br> ════════════════════════════════════════ <br><br>
+            📊 ¿Qué se puede mejorar?<br>
+                    Buscamos incentivar este concepto e idea a través de una simulación a baja escala, <br> 
+                    para esto, se construye el proyecto con la intención de abrir paso a:<br>
+                        - Aumentar la velocidad de transmisión<br>
+                        - Implementar corrección de errores<br>
+                        - Usar modulaciones más avanzadas<br>
+                        - Filtrar ruido de luz ambiente<br>
+                        - Transmitir textos extensos y/o datos de programa<br>
+        <br><br> ════════════════════════════════════════ <br><br>
+            🌟 Aplicaciones del Li-Fi<br>
+                    Comunicación inalámbrica en entornos donde el Wi-Fi no es viable<br>
+                    Redes seguras (la luz no atraviesa paredes)<br>
+                    Internet de alta velocidad mediante iluminación LED<br><br><br>
+        </p>
+
+        </section>
+    </div>
+
+    <nav class="dock">
+        <a href="#inicio" title="Inicio"><i class="fas fa-home"></i></a>
+        <a href="#informacion" title="Información"><i class="fas fa-book-open"></i></a>
+        <a href="#usuario" title="Usuario"><i class="fas fa-user"></i></a>
+        <a href="#archivos" title="Archivos"><i class="fas fa-folder"></i></a>
+        <a href="#Creacion" title="Creación"><i class="fas fa-cog"></i></a>
+    </nav>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dotsContainer = document.getElementById('parallax-dots');
+            
+            // Factor de movimiento: mayor número = movimiento más brusco. Menor = más sutil.
+            const movementFactor = 60; 
+
+            document.addEventListener('mousemove', (e) => {
+                // Calculamos el centro de la pantalla
+                const centerX = window.innerWidth / 2;
+                const centerY = window.innerHeight / 2;
+
+                // Calculamos la posición del mouse relativa al centro
+                const moveX = (e.clientX - centerX) / movementFactor;
+                const moveY = (e.clientY - centerY) / movementFactor;
+
+                // Aplicamos la transformación CSS (invertida para dar efecto de profundidad)
+                dotsContainer.style.transform = `translate(${-moveX}px, ${-moveY}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
