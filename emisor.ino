@@ -2,7 +2,7 @@
 int a;
 int led = 3;
 int brillo;
-String texto = "010000011";
+String texto = "101000001";
 int boton=8;
 int er=0;
 //entrada del enter
@@ -34,7 +34,7 @@ void loop() {
     Serial.print("Caracter: ");
     Serial.println(c);
     if (c == '0') {
-      analogWrite(led, 70);
+      analogWrite(led, 0);
     }
     if (c== '1'){
       analogWrite(led, 255);
