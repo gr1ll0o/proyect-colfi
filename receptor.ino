@@ -3,7 +3,11 @@ const int ledPin = 13;
 int lectura;
 int iguales = 0;
 
-int umbral = 500;
+String binario;
+char total;
+
+int conteo = 0;
+bool letra = false;
 bool espera = false;
 void setup() {
   Serial.begin(9600);
@@ -13,27 +17,41 @@ void setup() {
 
 void loop() {
   lectura = analogRead(ldrPin);
-  Serial.println(lectura);
-  if (lectura>80 || iguales==1){
+  //Serial.println(lectura);
+  if (lectura>15 || iguales==1){
+    if (iguales==0){
+      delay(200);
+    }
     iguales=1;
     if (espera==false && lectura<20){
       espera = true;
-      delay(930);
+      delay(920);
     }
     else
     {
       if (espera==true){
-        if (lectura>80){
+        if (lectura>15){
           Serial.println("Se detecto 1");
           espera = false;
+          binario += '1';
+          conteo=conteo+1;
         }
         else{
           Serial.println("Se detecto 0");
           espera = false;
+          binario += '0';
+          conteo=conteo+1;
+
         }
       }
     }
     }
-    else{
-  }
+    if (conteo==8 && letra==false){
+      Serial.println("Se transmitió la letra");
+      letra=true;
+      char caracter = (char)strtol(binario.c_str(), NULL, 2);
+      Serial.println(caracter);
+      delay(300);
+      exit(0);
+    }
 }
