@@ -31,13 +31,13 @@ void loop() {
     {
       if (espera==true){
         if (lectura>15){
-          Serial.println("Se detecto 1");
+          //Serial.println("Se detecto 1");
           espera = false;
           binario += '1';
           conteo=conteo+1;
         }
         else{
-          Serial.println("Se detecto 0");
+          //Serial.println("Se detecto 0");
           espera = false;
           binario += '0';
           conteo=conteo+1;
@@ -47,11 +47,11 @@ void loop() {
     }
     }
     if (conteo==8 && letra==false){
-      Serial.println("Se transmitió la letra");
+      //Serial.println("Se transmitió la letra");
       letra=true;
       char caracter = (char)strtol(binario.c_str(), NULL, 2);
       Serial.println(caracter);
       delay(300);
-      exit(0);
+      conteo=0;
     }
 }
