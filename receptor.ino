@@ -1,3 +1,4 @@
+#include <stdlib.h>
 const int ldrPin = A0;
 const int ledPin = 13;
 int lectura;
@@ -46,8 +47,13 @@ void loop() {
       }
     }
     }
-    if (conteo==8 ){
+    if (conteo==8){
       //Serial.println("Se transmitió la letra");}
+
+      /*if (binario="00000000"){
+        exit(0);
+      }*/
+      
       letra+=1;
       char caracter = (char)strtol(binario.c_str(), NULL, 2);
       Serial.print(caracter);
