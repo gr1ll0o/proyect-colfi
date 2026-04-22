@@ -7,7 +7,7 @@ String binario;
 char total;
 
 int conteo = 0;
-bool letra = false;
+int letra = 0;
 bool espera = false;
 void setup() {
   Serial.begin(9600);
@@ -20,12 +20,12 @@ void loop() {
   //Serial.println(lectura);
   if (lectura>15 || iguales==1){
     if (iguales==0){
-      delay(200);
+      delay(20);
     }
     iguales=1;
     if (espera==false && lectura<20){
       espera = true;
-      delay(920);
+      delay(49);
     }
     else
     {
@@ -46,12 +46,14 @@ void loop() {
       }
     }
     }
-    if (conteo==8 && letra==false){
-      //Serial.println("Se transmitió la letra");
-      letra=true;
+    if (conteo==8 ){
+      //Serial.println("Se transmitió la letra");}
+      letra+=1;
       char caracter = (char)strtol(binario.c_str(), NULL, 2);
-      Serial.println(caracter);
-      delay(300);
+      Serial.print(caracter);
+      //delay(300);
       conteo=0;
+      binario="";
     }
+    
 }
