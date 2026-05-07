@@ -1,3 +1,7 @@
+/*
+CODIGO PARA TRANSMITIR CADENAS DE TEXTO CON UN SOLO LED.
+*/
+
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -5,7 +9,7 @@
 int a;
 int led = 3;
 int brillo;
-const char texto[] PROGMEM = "101101000011011110110110001100001001000000110110101110101011011100110010001101111";
+const char texto[] PROGMEM = "101101001100001001000011011110110110000000110110101110101011011100110010001101111";
 int boton=8;
 int er=0;
 int estadoBoton = digitalRead(boton);
