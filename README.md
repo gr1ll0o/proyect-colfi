@@ -51,6 +51,8 @@ del Li-Fi hoy en día e incluso servir como alternativa a este y al Wi-Fi.
 En este apartado se encuentra la documentación del proyecto, tanto teórica como práctica.
 - ["Tecnología Col-Fi con LEDs RGB" - Thiago Grillo](https://docs.google.com/document/d/173AnS3XXFvmV6eeRK5DUw5NHlWwti-Y3nihKtxYBDz8/edit?usp=sharing)
 - ["Eficiencia" - Ciro Lopez](https://docs.google.com/document/d/1-Dihl-4YaM7QIMXAFMvgepBVzemDwMUJAeh4PGH9Aec/edit?usp=sharing)
+- ["Filtro de Colores en Fotorresistores" - Lucas Marin](https://docs.google.com/document/d/1OwOuXwQXEYv3yIC2PsYxsM0OvnhcgxYVaa0rZ5TPpB4/edit?usp=sharing)
+
 
 (Toda esta documentación puede ser descargada desde el directorio "doc").
 ## 👨‍🔬 Autores
