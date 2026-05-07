@@ -1,3 +1,7 @@
+/*
+CODIGO PARA RECIBIR CADENAS DE TEXTO CON UN SOLO LED.
+*/
+
 #include <stdlib.h>
 const int ldrPin = A0;
 const int ledPin = 13;
