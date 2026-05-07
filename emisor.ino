@@ -1,14 +1,10 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-#include <ctype.h>
-#include <string.h>
 #include <avr/pgmspace.h>
-int a;
 int led1 = 3;
 int led2 = 5;
-int brillo;
-const char texto[] PROGMEM = "01000001";
+const char texto[] PROGMEM = "01000010";
 int boton=8;
 int er=0;
 int cambio=0;
@@ -24,6 +20,7 @@ void loop()
 {
   Serial.println("");
   Serial.println("ESPERANDO INCIO SECUENCIA");
+  delay(500);
   int estadoBoton = digitalRead(boton);
   if (estadoBoton == 0) 
   {
@@ -35,15 +32,16 @@ void loop()
         er+=1;
         digitalWrite(led1, HIGH);
         digitalWrite(led2, HIGH);
-        delay(7);
+        delay(20);
       }
     }
   }
   digitalWrite(led1, LOW);
   digitalWrite(led2, LOW);
-  delay(3);
   for (int i = 0; i < strlen(texto); i++) 
   {
+    //delay(19);
+    delayMicroseconds(181200);
     char c = pgm_read_byte(&texto[i]);
     Serial.print("Caracter: ");
     Serial.println(c);
@@ -80,3 +78,4 @@ void loop()
   digitalWrite(led1, LOW);
   digitalWrite(led2, LOW);
 }
+
