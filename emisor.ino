@@ -3,8 +3,8 @@
 #include <string.h>
 #include <avr/pgmspace.h>
 int led1 = 3;
-int led2 = 5;
-const char texto[] PROGMEM = "01000010";
+int led2 = 6;
+const char texto[] PROGMEM = "01001000";
 int boton=8;
 int er=0;
 int cambio=0;
@@ -15,6 +15,7 @@ void setup()
   pinMode(boton, INPUT);
   Serial.begin(9600);
 }
+
 
 void loop() 
 {
@@ -32,7 +33,7 @@ void loop()
         er+=1;
         digitalWrite(led1, HIGH);
         digitalWrite(led2, HIGH);
-        delay(20);
+        delay(100);
       }
     }
   }
@@ -40,8 +41,6 @@ void loop()
   digitalWrite(led2, LOW);
   for (int i = 0; i < strlen(texto); i++) 
   {
-    //delay(19);
-    delayMicroseconds(181200);
     char c = pgm_read_byte(&texto[i]);
     Serial.print("Caracter: ");
     Serial.println(c);
@@ -71,11 +70,10 @@ void loop()
         cambio=0;
       }
     }
-    delay(20);
+    delay(100);
   }
   er=0;
-  delay(15);
+  delay(600);
   digitalWrite(led1, LOW);
   digitalWrite(led2, LOW);
 }
-
