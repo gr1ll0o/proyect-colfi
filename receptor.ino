@@ -29,7 +29,7 @@ void loop() {
   {
     //Serial.println("Hola");
     if (iguales==0){
-      delay(20);
+      delay(102);
       iguales=1;
     }
     if (!espera || (lectura1 < 10 && lectura2 < 10))
@@ -37,20 +37,27 @@ void loop() {
       espera = true;
       //Serial.println("Si");
       //delay(12);
-      delay(115);
-      //delayMicroseconds(0);
     }
-
 
     if (espera==true) 
     {
 
-      if (lectura1>15)
+      if (lectura1>13)
       {
+        if (letra==0)
+        {
+          binario+='0';
+          Serial.println("0");
+        }
+        else
+        {
         binario += '1';
+        
         Serial.println("1");
+        }
         conteo=conteo+1;
         letra+=1;
+        
       }
       else
       {
@@ -59,7 +66,7 @@ void loop() {
         conteo=conteo+1;
       }
       ///////////////////
-      if (lectura2>15)
+      if (lectura2>13)
       {
         binario += '1';
         Serial.println("1");
@@ -78,14 +85,18 @@ void loop() {
   }
 
   espera=false;
+  delay(312);
+
   if (conteo==8)
   {
     if (binario==vacio)
     {
       iguales=0;
+      binario="";
+      //exit(0);
     }
     char caracter = (char)strtol(binario.c_str(), NULL, 2);
-    Serial.println(caracter); 
+    Serial.print(caracter); 
     conteo=0;
     binario="";
   }
