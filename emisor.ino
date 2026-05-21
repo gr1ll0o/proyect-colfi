@@ -4,76 +4,88 @@
 #include <avr/pgmspace.h>
 int led1 = 3;
 int led2 = 6;
-const char texto[] PROGMEM = "01001000";
+int sincro = 7;
+const char texto[] PROGMEM = "010011100110111101110011001000000110110001101111011100110010000001110010011001010111000001110010011001010111001101100101011011100111010001100001011011100111010001100101011100110010000001100100011001010110110000100000011100000111010101100101011000100110110001101111001000000110010001100101001000000110110001100001001000000100111001100001011000110110100101101111011011100010000001000001011100100110011101100101011011100111010001101001011011100110000100101100001000000111001001100101011101010110111001101001011001000110111101110011001000000110010101101110001000000100001101101111011011100110011101110010011001010111001101101111001000000100011101100101011011100110010101110010011000010110110000100000010000110110111101101110011100110111010001101001011101000111010101111001011001010110111001110100011001010010000001110000011011110111001000100000011101100110111101101100011101010110111001110100011000010110010000100000011110010010000001100101011011000110010101100011011000110110100101101111011011100010000001100100011001010010000001101100011000010111001100100000011100000111001001101111011101100110100101101110011000110110100101100001011100110010000001110001011101010110010100100000011011000110000100100000011000110110111101101101011100000110111101101110011001010110111000101100";
 int boton=8;
 int er=0;
 int cambio=0;
+int conteo=0;
 void setup() 
 {
   pinMode(led1, OUTPUT);
   pinMode(led2, OUTPUT);
+  pinMode(sincro, OUTPUT);
   pinMode(boton, INPUT);
-  Serial.begin(9600);
+  Serial.begin(230400);
+  Serial.println("");
+  Serial.println("ESPERANDO INCIO SECUENCIA");
+  delay(300);
 }
 
 
 void loop() 
 {
-  Serial.println("");
-  Serial.println("ESPERANDO INCIO SECUENCIA");
-  delay(500);
   int estadoBoton = digitalRead(boton);
   if (estadoBoton == 0) 
   {
     while(er==0)
     {
       estadoBoton = digitalRead(boton);
+      /*digitalWrite(led2, HIGH);
+      delay(50);
+      digitalWrite(led2, LOW);
+      delay(50);*/
       if(estadoBoton==1)
       {
         er+=1;
-        digitalWrite(led1, HIGH);
-        digitalWrite(led2, HIGH);
         delay(100);
       }
     }
   }
   digitalWrite(led1, LOW);
   digitalWrite(led2, LOW);
-  for (int i = 0; i < strlen(texto); i++) 
+  digitalWrite(sincro, LOW);
+  char c = pgm_read_byte(&texto[conteo]);
+  Serial.print("Caracter: ");
+  Serial.println(c);
+  digitalWrite(sincro, HIGH);
+
+  if (c == '0')
   {
-    char c = pgm_read_byte(&texto[i]);
-    Serial.print("Caracter: ");
-    Serial.println(c);
-    if (c == '0')
-    {
-      if(cambio==0)
-      {
-        digitalWrite(led1, LOW);
-        cambio=1;
-      }
-      else
-      {
-        digitalWrite(led2, LOW);
-        cambio=0;
-      }
-    }
-    if (c== '1')
-    {
-      if(cambio==0)
-      {  
-        digitalWrite(led1, HIGH);
-        cambio=1;
-      }
-      else
-      {
-        digitalWrite(led2, HIGH);
-        cambio=0;
-      }
-    }
-    delay(100);
+      digitalWrite(led1, LOW);
+      conteo+=1;
   }
-  er=0;
-  delay(600);
+  else
+    {
+      digitalWrite(led1, HIGH);
+      conteo+=1;
+    }
+
+  c = pgm_read_byte(&texto[conteo]);
+  Serial.print("Caracter: ");
+  Serial.println(c);
+
+  if (c== '1')
+  {
+       digitalWrite(led2, HIGH);
+      conteo+=1;
+  }
+  else
+    {
+      digitalWrite(led2, LOW);
+      conteo+=1;
+    }
+  
+  delay(300);
+  digitalWrite(sincro, LOW);
   digitalWrite(led1, LOW);
   digitalWrite(led2, LOW);
+  delay(300);
+
+  if (conteo==strlen(texto))
+  {
+    er=0;
+    conteo=0;
+    Serial.println("");
+  }
 }
