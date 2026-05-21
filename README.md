@@ -29,6 +29,8 @@ El repositorio incluye:
 `receptor.ino` → Código del Arduino receptor
 
 Tambien se incluye [página web del proyecto](https://col-fi.netlify.app/) (en desarrollo).
+La carpeta `photos` contiene registros de nuestro trabajo. En `docs` se puede encontrar
+toda la documentacion del proyecto (teorias, material, desarrollo, entre otros).
 
 ## 📊 ¿Qué se puede mejorar?
 Buscamos incentivar este concepto e idea a través de una simulación
