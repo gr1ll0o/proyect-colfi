@@ -1,91 +1,95 @@
 #include <stdlib.h>
 const int ldrPin = A0;
 const int ldrPin2 = A1;
-int lectura1, lectura2;
-int iguales = 0;
+const int ldrPin3 = A2;
+int lectura1, lectura2, lectura3;
+int activacion = false;
 
 String binario;
 String vacio = "00000000";
 char total;
 
 int conteo = 0;
-int letra = 0;
-bool espera = true;
+bool espera = false;
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(2000000);
   pinMode(ldrPin, INPUT);
   pinMode(ldrPin2, INPUT);
+  pinMode(ldrPin3, INPUT);
   Serial.println("--------------");
 }
 
 void loop() {
 
   lectura1 = analogRead(ldrPin);
-  //Serial.println(lectura1);
   lectura2 = analogRead(ldrPin2);
-  //Serial.println(lectura2);
+  //Serial.println(lectura1);
 
-  if ((lectura1>7 && lectura2>7) || iguales==1)
+  if ((lectura1>10 && lectura2>10) || activacion==true)
   {
-    //Serial.println("Hola");
-    if (iguales==0){
-      delay(8);
-      iguales=1;
-    }
-    if (!espera || (lectura1 < 10 && lectura2 < 10))
+    if (activacion==false)
     {
-      espera = true;
-      //Serial.println("Si");
-      //delay(12);
+      activacion=true;
+      delay(49);
+      delayMicroseconds(940);
     }
 
-    if (espera==true) 
+    lectura1 = analogRead(ldrPin);
+    if (lectura1>30)
     {
-
-      if (lectura1>13)
+      if (conteo==0)
       {
-        binario += '1';
-        Serial.println("1");
-        conteo=conteo+1;
-        letra+=1;
+        binario+="0";
+        conteo+=1;
+        //Serial.println("0");
       }
-      else
-      {
-        binario += '0';
-        Serial.println("0");
-        conteo=conteo+1;
-      }
-      ///////////////////
-      if (lectura2>13)
-      {
-        binario += '1';
-        Serial.println("1");
-        conteo=conteo+1;
-        espera=true;
-      }
-      else
-      {
-        binario += '0';
-        Serial.println("0");
-        conteo=conteo+1;
-        espera=true;
-      }
-
+      else{
+      binario+="1";
+      conteo+=1;  
+      //Serial.println("1");
+      }   
     }
-  }
 
-  espera=false;
-  delay(12);
-
-  if (conteo==8)
-  {
-    if (binario==vacio)
+    else
     {
-      iguales=0;
+      binario+="0";
+      conteo+=1;
+      //Serial.println("0");
     }
-    char caracter = (char)strtol(binario.c_str(), NULL, 2);
-    Serial.print(caracter); 
-    conteo=0;
-    binario="";
+
+    lectura2 = analogRead(ldrPin2);
+    if(conteo==7){
+    //Serial.print("Lectura:");
+    //Serial.println(lectura2);
+    }
+
+    if (lectura2>20)
+    {
+      binario+="1";
+      conteo+=1;  
+      //Serial.println("1");
+    }
+
+    else
+    {
+      binario+="0";
+      conteo+=1;
+      //Serial.println("0");
+    }
+
+    delay(50);
+
+    if (conteo==8)
+        {
+          if (binario==vacio)
+          {
+            activacion=false;
+          }
+          char caracter = (char)strtol(binario.c_str(), NULL, 2);
+          //Serial.println("--------------------");
+          Serial.print(caracter); 
+          conteo=0;
+          binario="";
+        }
   }
 }
