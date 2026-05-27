@@ -1,82 +1,80 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-#include <ctype.h>
-#include <string.h>
 #include <avr/pgmspace.h>
-int a;
 int led1 = 3;
-int led2 = 5;
-int brillo;
-const char texto[] PROGMEM = "01000001";
-int boton=8;
-int er=0;
-int cambio=0;
+int led2 = 6;
+int sincro = 7;
+char testeo[] ="01000001";
+bool pasa= false;
+String texto;
+int conteo=0;
+int indice = 0;
+String palabra;
 void setup() 
 {
   pinMode(led1, OUTPUT);
   pinMode(led2, OUTPUT);
-  pinMode(boton, INPUT);
-  Serial.begin(9600);
+  pinMode(sincro, OUTPUT);
+  Serial.begin(115200);
+  Serial.setTimeout(100);
+  Serial.print("INGRESE PALABRA");
+  while(Serial.available()==0)
+  {
+  }
+  palabra = Serial.readStringUntil('\n');
+  digitalWrite(led1, HIGH);
+  delay(1000);
+  digitalWrite(led1, LOW);
+  //delay(500);
 }
+
 
 void loop() 
 {
-  Serial.println("");
-  Serial.println("ESPERANDO INCIO SECUENCIA");
-  int estadoBoton = digitalRead(boton);
-  if (estadoBoton == 0) 
+  while(pasa==false)
   {
-    while(er==0)
-    {
-      estadoBoton = digitalRead(boton);
-      if(estadoBoton==1)
-      {
-        er+=1;
-        digitalWrite(led1, HIGH);
-        digitalWrite(led2, HIGH);
-        delay(7);
-      }
-    }
-  }
-  digitalWrite(led1, LOW);
-  digitalWrite(led2, LOW);
-  delay(3);
-  for (int i = 0; i < strlen(texto); i++) 
-  {
-    char c = pgm_read_byte(&texto[i]);
-    Serial.print("Caracter: ");
-    Serial.println(c);
-    if (c == '0')
-    {
-      if(cambio==0)
+    char c = testeo[conteo];
+      if (c == '0')
       {
         digitalWrite(led1, LOW);
-        cambio=1;
       }
       else
       {
-        digitalWrite(led2, LOW);
-        cambio=0;
-      }
-    }
-    if (c== '1')
-    {
-      if(cambio==0)
-      {  
         digitalWrite(led1, HIGH);
-        cambio=1;
+      }
+      if (c == testeo[conteo])
+      {
+        conteo++;
       }
       else
       {
-        digitalWrite(led2, HIGH);
-        cambio=0;
+        exit(0);
       }
-    }
-    delay(20);
+      Serial.print("Caracter: ");
+      Serial.println(c);
+      delay(1000);
+      if(conteo==8)
+      {
+        pasa=true;
+      }
   }
-  er=0;
-  delay(15);
+  conteo=0;
+  for(int i = 0; i < palabra.length(); i++)
+  {
+    char c = palabra[i];
+    for(int bit = 7; bit >= 0; bit--)
+    {
+      int valor = bitRead(c, bit);
+      texto += char(valor + '0');
+    }
+  }
+  Serial.print(texto);
+  while(true)
+  {
+  }
   digitalWrite(led1, LOW);
   digitalWrite(led2, LOW);
+  digitalWrite(sincro, LOW);
+  //char c = testeo[conteo];
 }
