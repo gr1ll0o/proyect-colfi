@@ -1,95 +1,146 @@
 #include <stdlib.h>
 const int ldrPin = A0;
 const int ldrPin2 = A1;
-const int ldrPin3 = A2;
-int lectura1, lectura2, lectura3;
-int activacion = false;
+int lectura1, lectura2;
+int iguales = 0;
 
 String binario;
 String vacio = "00000000";
 char total;
 
+int valDel = 2;
+
+int umbral = 5;
+int numBin1, numAct1;
+int numBin2, numAct2;
+bool espera=false;
+
+int numAnt1=0;
+int numAnt2=0;
+
+int inicio = 0;
 int conteo = 0;
-bool espera = false;
+
+int tiempo=0;
+
 void setup() {
-  Serial.begin(2000000);
+  Serial.begin(115200);
   pinMode(ldrPin, INPUT);
   pinMode(ldrPin2, INPUT);
-  pinMode(ldrPin3, INPUT);
   Serial.println("--------------");
 }
 
 void loop() {
+  delay(tiempo/2);
+  numAct1 = analogRead(ldrPin);
+  //Serial.println(numAct1);
+  numAct2 = analogRead(ldrPin2);
+  //Serial.println(numAct2);
+  delay(tiempo/2);
 
-  lectura1 = analogRead(ldrPin);
-  lectura2 = analogRead(ldrPin2);
-  //Serial.println(lectura1);
+  //Serial.print("NumAct:");
+  //Serial.println(numAct1);
 
-  if ((lectura1>10 && lectura2>10) || activacion==true)
+
+  //Serial.print("NumAnt:");
+  //Serial.println(numAnt1);
+
+  if (numAct1>numAnt1+umbral)
   {
-    if (activacion==false)
+    numBin1=1;
+  }
+  if (numAct1<numAnt1-umbral)
+  {
+    numBin1=0;
+  }
+
+//////////////////
+
+  if (numAct2>numAnt2+umbral)
+  {
+    numBin2=1;
+  }
+  if (numAct2<numAnt2-umbral)
+  {
+    numBin2=0;
+  }
+
+  numAnt1=numAct1;
+  numAnt2=numAct2;
+
+  unsigned long t0 = millis();
+  while (numBin1==1 && inicio==0)
+  {
+    numAct1 = analogRead(ldrPin);
+    //Serial.println(numAct1);
+    if (numAct1>numAnt1+umbral){numBin1=1;}
+    if (numAct1<numAnt1-umbral){numBin1=0;}
+    numAnt1=numAct1;
+    delay(1);
+  }
+
+  tiempo = millis() - t0;
+
+  if (tiempo>10){
+    Serial.print("Delay detectado:");
+    Serial.println(tiempo);
+    inicio+=1;
+    espera=true;
+  }
+
+
+  //Serial.println(inicio);
+ 
+ if (inicio>=2)
+ {
+  if (numBin1==1)
+  {
+    binario+="1";
+    conteo+=1;
+    Serial.print("Caracter:");
+    Serial.println("1");
+  }
+  else
+  {
+    binario+="0";
+    conteo+=1;
+    Serial.print("Caracter:");
+    Serial.println("0");
+  }
+
+  
+  if (numBin2==1)
+  {
+    binario+="1";
+    conteo+=1;
+    Serial.print("Caracter:");
+    Serial.println("1");
+    
+  }
+  else
+  {
+    binario+="0";
+    conteo+=1;
+    Serial.print("Caracter:");
+    Serial.println("0");
+  }
+ }
+ 
+   if (conteo==8)
+  {
+    if (binario==vacio)
     {
-      activacion=true;
-      delay(49);
-      delayMicroseconds(940);
+      iguales=0;
+      exit(0);
     }
+    char caracter = (char)strtol(binario.c_str(), NULL, 2);
+    Serial.print(caracter); 
+    conteo=0;
+    binario="";
+  } 
 
-    lectura1 = analogRead(ldrPin);
-    if (lectura1>30)
-    {
-      if (conteo==0)
-      {
-        binario+="0";
-        conteo+=1;
-        //Serial.println("0");
-      }
-      else{
-      binario+="1";
-      conteo+=1;  
-      //Serial.println("1");
-      }   
-    }
-
-    else
-    {
-      binario+="0";
-      conteo+=1;
-      //Serial.println("0");
-    }
-
-    lectura2 = analogRead(ldrPin2);
-    if(conteo==7){
-    //Serial.print("Lectura:");
-    //Serial.println(lectura2);
-    }
-
-    if (lectura2>20)
-    {
-      binario+="1";
-      conteo+=1;  
-      //Serial.println("1");
-    }
-
-    else
-    {
-      binario+="0";
-      conteo+=1;
-      //Serial.println("0");
-    }
-
-    delay(50);
-
-    if (conteo==8)
-        {
-          if (binario==vacio)
-          {
-            activacion=false;
-          }
-          char caracter = (char)strtol(binario.c_str(), NULL, 2);
-          //Serial.println("--------------------");
-          Serial.print(caracter); 
-          conteo=0;
-          binario="";
-        }
+  if (espera==true)
+  {
+    inicio+=1;
   }
 }
