@@ -63,7 +63,7 @@ Proyecto realizado por:\
 [Thiago Grillo](https://github.com/gr1ll0o),
 [Ciro Lopez](https://markdownlivepreview.com/),
 [Lucas Marin](https://github.com/M4rr1nn),
-[Valentino Russo](https://github.com/Rusko33), y [Yago Sayas](https://github.com/yagosayas123).
+[Thiago Puga](https://github.com/thiagomanupuga-bit), y [Yago Sayas](https://github.com/yagosayas123).
 
 Para la "Feria de Educación, Artes, Ciencias y Tecnología 2026".
 
