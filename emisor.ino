@@ -1,18 +1,22 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-int led1 = 3;
-int led2 = 6;
+int led1 = 6;
+int led2 = 3;
 int sincro = 7;
-char testeo[] ="10101010";
+String testeo ="10101";
 bool pasa= false;
 String texto;
 int conteo=0;
 String palabra;
-int espera =1000;
+int espera= 2500;
+float tiempo;
+float acumulo;
+float estimacion = 2502.4;
+int car=0;
+unsigned long ti=0;
 void setup() 
 {
-  Serial.println("");
   pinMode(led1, OUTPUT);
   pinMode(led2, OUTPUT);
   pinMode(sincro, OUTPUT);
@@ -32,17 +36,13 @@ void setup()
       texto += char(valor + '0');
     }
   }
-  digitalWrite(led1, HIGH);
-  delay(1000);
-  digitalWrite(led1, LOW);
-  //delay(500);
 }
 
 
 void loop() 
 {
   palabra = Serial.readStringUntil('\n');
-  /*while(pasa==false)
+  while(pasa==false)
   {
     char c = testeo[conteo];
       if (c == '0')
@@ -53,22 +53,35 @@ void loop()
       {
         digitalWrite(led1, HIGH);
       }
-      if (c == testeo[conteo])
+      Serial.print(c);
+      conteo++;
+      c = testeo[conteo];
+      delay(espera);
+      /*if(c=='0')
       {
-        conteo++;
+        digitalWrite(led2, LOW);
       }
       else
       {
-        exit(0);
+        digitalWrite(led2, HIGH);
       }
-      Serial.print("Caracter: ");
-      Serial.println(c);
-      delay(1000);
-      if(conteo==8)
+      Serial.print(c);
+      delay(espera);
+      conteo++;*/
+      if(conteo==5)
       {
+        digitalWrite(led1, LOW);
+        digitalWrite(led2, LOW);
+        conteo=0;
+        Serial.println("");
         pasa=true;
       }
-  }*/
+  }
+  delay(espera);
+  if (car==0)
+  {
+    ti = millis();
+  }
   char c = texto[conteo];
   Serial.print(c);
   if(c=='0')
@@ -79,8 +92,8 @@ void loop()
   {
     digitalWrite(led1, HIGH);
   }
-
   conteo+=1;
+  car+=1;
   c = texto[conteo];
   Serial.print(c);
   if(c=='0')
@@ -91,15 +104,28 @@ void loop()
   {
     digitalWrite(led2, HIGH);
   }
-  delay(1000);
-  digitalWrite(led1, LOW);
-  digitalWrite(led2, LOW);
   conteo+=1;
-
-  if(conteo >= texto.length() || palabra== "para gil")
+  car+=1;
+  if (car==8)
   {
+    //Serial.println(millis());
+    //Serial.println(ti);
+    tiempo = millis() - ti;
+    acumulo = estimacion*4-tiempo;
+    car=0;
+    if (acumulo<0)
+    {
+      Serial.println(acumulo);
+      acumulo=acumulo*-1;
+      delay(acumulo);
+    }
+  }
+  if(conteo == texto.length() || palabra== "para gil")
+  {
+    delay(espera);
     digitalWrite(led1, LOW);
     digitalWrite(led2, LOW);
+    Serial.println("");
     asm volatile ("jmp 0");
   }
 }
