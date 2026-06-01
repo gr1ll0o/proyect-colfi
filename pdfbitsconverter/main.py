@@ -12,13 +12,21 @@ import os
 import tkinter as tk
 import webbrowser
 import time
+import sys
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 root = tk.Tk()
 root.geometry("500x300")
 root.resizable(False, False)
 root.title("colFi. - Conversor de PDF a bytes")
-root.iconbitmap('assets/logo.ico')
-#root.attributes("-toolwindow", True)
+root.iconbitmap(resource_path("assets\logo.ico"))
 
 root.config(bg="#111212")
 modo = tk.IntVar(value=0)
