@@ -2,7 +2,7 @@
 Conversor de PDF a BITS y viceversa
 --
 
-Programado por Thiago Grillo para el proyecto Col-Fi de Feria de Ciencias 2026
+Programado por Thiago Grillo para el proyecto Col-Fi de Feria de Ciencias 2026.
 
 """
 
@@ -17,6 +17,7 @@ root = tk.Tk()
 root.geometry("500x300")
 root.resizable(False, False)
 root.title("colFi. - Conversor de PDF a bytes")
+root.iconbitmap('assets/logo.ico')
 #root.attributes("-toolwindow", True)
 
 root.config(bg="#111212")
