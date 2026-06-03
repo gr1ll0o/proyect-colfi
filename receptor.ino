@@ -2,7 +2,6 @@
 const int ldrPin = A1;
 const int ldrPin2 = A0;
 const int sincro = A2;
-const int Sincro = 7;
 int lectura1, lectura2;
 int iguales = 0;
 
@@ -10,7 +9,7 @@ String binario;
 String vacio = "00000000";
 int lectura;
 float estimacion=1000;
-int estimacionfinal=0;
+int estimacionfinal=100;
 float K[5]={0.35, 0.25, 0.20, 0.12, 0.08};
 int acomodo=0;
 char total;
@@ -18,7 +17,9 @@ int valDel = 2;
 int umbral = 1;
 int numBin1=0, numAct1=0, delays, tiempoact, diftiempo;
 int numBin2=0, numAct2=0;
+int numBinSincro=0, numActSincro=0, numAntSincro=0;
 bool espera=false;
+bool reset=false;
 bool eravez=false;
 
 int numAnt1=0;
@@ -33,7 +34,7 @@ unsigned long tiempo;
 bool cambio=false;
 bool cambio2=false;
 int i;
-int lecturas=0;
+int lecturas=5;
 int a=1;
 int b=1;
 unsigned long t0=0;
@@ -41,11 +42,15 @@ void setup() {
   Serial.begin(115200);
   pinMode(ldrPin, INPUT);
   pinMode(ldrPin2, INPUT);
+  pinMode(sincro, INPUT);
   Serial.println("--------------");
 }
 
 void loop() {
   lectura=analogRead(sincro);
+  if (numActSincro>numAntSincro+umbral){numBinSincro=1;}
+  if (numActSincro<numAntSincro-umbral){numBinSincro=0;}
+  numAntSincro=numActSincro;
   if (espera==false && lecturas==5)
   {
     numAct2=0;
@@ -55,13 +60,15 @@ void loop() {
     numBin1=0;
     numBin2=0;
   }
-  while(lecturas==5 && lectura<10)
+
+  while(lecturas==5 && numBinSincro==0)
   {
-    lectura=analogRead(sincro);
-    if (lectura>10)
-    {
-      break;
-    }
+    numActSincro=analogRead(sincro);
+    //Serial.println(numAct1);
+    //if (numActSincro>numAntSincro+umbral){numBinSincro=1;}
+    //if (numActSincro<numAntSincro-umbral){numBinSincro=0;}
+    numAntSincro=numActSincro;
+    reset=true;
     espera=true;
   }
   numAct2 = analogRead(ldrPin2);
@@ -73,7 +80,7 @@ void loop() {
   numAnt1=numAct1;
   numAnt2=numAct2;
   //Serial.println(eravez);
-  if (lecturas==5)
+  if (lecturas==5 && reset==true)
   {
     if (numBin1==1)
     {
@@ -82,7 +89,7 @@ void loop() {
         binario+="0";
         conteo+=1;
         //Serial.print("Caracter:");
-        Serial.println("Hola");
+        //Serial.println("Hola");
       }
       else
       {
@@ -115,7 +122,7 @@ void loop() {
         binario+="1";
         conteo+=1;
         //Serial.print("Caracter:");
-        Serial.println("Hola");
+        //Serial.println("Hola");
         eravez=true;
       }
       else
@@ -126,6 +133,7 @@ void loop() {
       //Serial.println("0");
       }
     }
+    reset=false;
   }
 
   if (conteo==8)
@@ -140,9 +148,8 @@ void loop() {
       conteo=0;
       binario="";
     }
-    delay(estimacionfinal/4);
 
-  while(lecturas!=5)
+  /*while(lecturas!=5)
   {
     //Serial.println(numAct2);
     numAct1 = analogRead(ldrPin);
@@ -164,7 +171,6 @@ void loop() {
       if (cambio==true)
       {
         tiempo = millis() - t0;
-        tf1[lecturas]= millis() - t0;
         Serial.println(tiempo);
         estimacion = estimacion + K[lecturas] * (tiempo-estimacion);
         cambio=false;
@@ -202,5 +208,5 @@ void loop() {
       }
       delay(10);
     }
-  }
+  }*/
 }
