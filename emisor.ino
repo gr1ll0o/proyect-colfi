@@ -9,7 +9,7 @@ bool pasa= false;
 String texto;
 int conteo=0;
 String palabra;
-int espera=1000;
+int espera=100;
 void setup() 
 {
   Serial.println("");
@@ -23,6 +23,9 @@ void setup()
   {
   }
   palabra = Serial.readStringUntil('\n');
+  int cant=palabra.length();
+  char buffer[cant];
+  //itoa(palabra, buffer, 10);
   for(int i = 0; i < palabra.length(); i++)
   {
     char c = palabra[i];
