@@ -1,22 +1,25 @@
 #include <stdlib.h>
 const int ldrPin = A1;
 const int ldrPin2 = A0;
+const int sincro = A2;
 const int Sincro = 7;
 int lectura1, lectura2;
 int iguales = 0;
 
 String binario;
 String vacio = "00000000";
+int lectura;
 float estimacion=1000;
 int estimacionfinal=0;
 float K[5]={0.35, 0.25, 0.20, 0.12, 0.08};
 int acomodo=0;
 char total;
 int valDel = 2;
-int umbral = 2;
+int umbral = 1;
 int numBin1=0, numAct1=0, delays, tiempoact, diftiempo;
 int numBin2=0, numAct2=0;
 bool espera=false;
+bool eravez=false;
 
 int numAnt1=0;
 int numAnt2=0;
@@ -42,84 +45,102 @@ void setup() {
 }
 
 void loop() {
-  if(conteo==0)
+  lectura=analogRead(sincro);
+  if (espera==false && lecturas==5)
   {
-    t0=millis();
+    numAct2=0;
+    numAct1=0;
+    numAnt2=0;
+    numAnt1=0;
+    numBin1=0;
+    numBin2=0;
   }
-  //Serial.println(estimacionfinal);
+  while(lecturas==5 && lectura<10)
+  {
+    lectura=analogRead(sincro);
+    if (lectura>10)
+    {
+      break;
+    }
+    espera=true;
+  }
   numAct2 = analogRead(ldrPin2);
-  //Serial.println(numAct2);
   numAct1 = analogRead(ldrPin);
-  //Serial.println(numAct1);
   if (numAct1>numAnt1+umbral){numBin1=1;}
   if (numAct1<numAnt1-umbral){numBin1=0;}
   if (numAct2>numAnt2+umbral){numBin2=1;}
   if (numAct2<numAnt2-umbral){numBin2=0;}
   numAnt1=numAct1;
   numAnt2=numAct2;
-
+  //Serial.println(eravez);
   if (lecturas==5)
   {
-    if(conteo==0)
+    if (numBin1==1)
     {
-      t0=millis();
-    }
-    if(numBin1==1)
-    {
+      if(eravez==false)
+      {
+        binario+="0";
+        conteo+=1;
+        //Serial.print("Caracter:");
+        Serial.println("Hola");
+      }
+      else
+      {
       binario+="1";
       conteo+=1;
-      Serial.print("Caracter:");
-      Serial.println("1");
+      //Serial.print("Caracter:");
+      //Serial.println("1");
+      }
     }
     else
     {
       binario+="0";
       conteo+=1;
-      Serial.print("Caracter:");
-      Serial.println("0");
+      //Serial.print("Caracter:");
+      //Serial.println("0");
     }
-    /////////
-    if(numBin2==1)
+
+    if (numBin2==1)
     {
       binario+="1";
       conteo+=1;
-      Serial.print("Caracter:");
-      Serial.println("1");
+      //Serial.print("Caracter:");
+      //Serial.println("1");
+      eravez=true;
     }
     else
     {
+      if(eravez==false)
+      {
+        binario+="1";
+        conteo+=1;
+        //Serial.print("Caracter:");
+        Serial.println("Hola");
+        eravez=true;
+      }
+      else
+      {
       binario+="0";
       conteo+=1;
-      Serial.print("Caracter:");
-      Serial.println("0");
+      //Serial.print("Caracter:");
+      //Serial.println("0");
+      }
     }
   }
 
   if (conteo==8)
-  {
-    if (binario==vacio)
     {
-      iguales=0;
-      asm volatile ("jmp 0");
+      if (binario==vacio)
+      {
+        iguales=0;
+        asm volatile ("jmp 0");
+      }
+      char caracter = (char)strtol(binario.c_str(), NULL, 2);
+      Serial.print(caracter); 
+      conteo=0;
+      binario="";
     }
-    char caracter = (char)strtol(binario.c_str(), NULL, 2);
-    Serial.println(caracter); 
-    tiempo=millis()-t0;
-    t2=estimacionfinal*3;
-    acomodo=t2-tiempo;
-    //Serial.println(tiempo);
-    //Serial.println(t2);
-    Serial.print("Acomodo:");
-    Serial.println(acomodo);
-    //digitalWrite(Sincro, HIGH),
-    //delay(acomodo);
-    //digitalWrite(Sincro, LOW);
-    if(acomodo>0){//delay(acomodo);
-    }
-    conteo=0;
-    binario="";
-    } 
-  delay(estimacionfinal);
+    delay(estimacionfinal/4);
 
   while(lecturas!=5)
   {
@@ -153,11 +174,10 @@ void loop() {
         Serial.print("Estimación:");
         Serial.println(estimacion);
         estimacionfinal=estimacion;
-        delay(estimacionfinal/2);
-        delay(estimacionfinal);
         umbral=50;
         }
       }
+      delay(10);
     }
     //////////////
     t0 = millis();
@@ -180,6 +200,7 @@ void loop() {
         estimacion = estimacion + K[lecturas] * (tiempo-estimacion);
         lecturas++;
       }
+      delay(10);
     }
   }
 }
