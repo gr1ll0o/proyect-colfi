@@ -1,185 +1,98 @@
-#include <stdlib.h>
-const int ldrPin = A1;
-const int ldrPin2 = A0;
-const int Sincro = 7;
-int lectura1, lectura2;
-int iguales = 0;
-
-String binario;
-String vacio = "00000000";
-float estimacion=1000;
-int estimacionfinal=0;
-float K[5]={0.35, 0.25, 0.20, 0.12, 0.08};
-int acomodo=0;
-char total;
-int valDel = 2;
-int umbral = 2;
-int numBin1=0, numAct1=0, delays, tiempoact, diftiempo;
-int numBin2=0, numAct2=0;
-bool espera=false;
-
-int numAnt1=0;
-int numAnt2=0;
-unsigned long t2;
-int inicio = 0;
-int conteo = 0;
-unsigned long t1[8];
-unsigned long tf1[8];
-unsigned long tf2[8];
-unsigned long tiempo;
-bool cambio=false;
-bool cambio2=false;
-int i;
-int lecturas=0;
-int a=1;
-int b=1;
-unsigned long t0=0;
-void setup() {
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+int led1 = 6;
+int led2 = 3;
+int sincro = 7;
+char testeo[] ="10101";
+bool pasa= false;
+String texto;
+int conteo=0;
+String palabra;
+int espera=1000;
+void setup() 
+{
+  Serial.println("");
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(sincro, OUTPUT);
   Serial.begin(115200);
-  pinMode(ldrPin, INPUT);
-  pinMode(ldrPin2, INPUT);
-  Serial.println("--------------");
+  Serial.setTimeout(100);
+  Serial.println("INGRESE PALABRA");
+  while(Serial.available()==0)
+  {
+  }
+  palabra = Serial.readStringUntil('\n');
+  for(int i = 0; i < palabra.length(); i++)
+  {
+    char c = palabra[i];
+    for(int bit = 7; bit >= 0; bit--)
+    {
+      int valor = bitRead(c, bit);
+      texto += char(valor + '0');
+    }
+  }
 }
 
-void loop() {
-  if(conteo==0)
-  {
-    t0=millis();
-  }
-  //Serial.println(estimacionfinal);
-  numAct2 = analogRead(ldrPin2);
-  //Serial.println(numAct2);
-  numAct1 = analogRead(ldrPin);
-  //Serial.println(numAct1);
-  if (numAct1>numAnt1+umbral){numBin1=1;}
-  if (numAct1<numAnt1-umbral){numBin1=0;}
-  if (numAct2>numAnt2+umbral){numBin2=1;}
-  if (numAct2<numAnt2-umbral){numBin2=0;}
-  numAnt1=numAct1;
-  numAnt2=numAct2;
 
-  if (lecturas==5)
+void loop() 
+{
+  palabra = Serial.readStringUntil('\n');
+  while(pasa==false)
   {
-    if(conteo==0)
+    char c = testeo[conteo];
+    if(c=='0')
     {
-      t0=millis();
-    }
-    if(numBin1==1)
-    {
-      binario+="1";
-      conteo+=1;
-      Serial.print("Caracter:");
-      Serial.println("1");
+      digitalWrite(led1, LOW);
     }
     else
     {
-      binario+="0";
-      conteo+=1;
-      Serial.print("Caracter:");
-      Serial.println("0");
+      digitalWrite(led1, HIGH);
     }
-    /////////
-    if(numBin2==1)
+    Serial.print(c);
+    delay(espera);
+    conteo+=1;
+    if(conteo==5)
     {
-      binario+="1";
-      conteo+=1;
-      Serial.print("Caracter:");
-      Serial.println("1");
-    }
-    else
-    {
-      binario+="0";
-      conteo+=1;
-      Serial.print("Caracter:");
-      Serial.println("0");
+      digitalWrite(led1, LOW);
+      digitalWrite(led2, LOW);
+      Serial.println("");
+      conteo=0;
+      pasa=true;
     }
   }
-
-  if (conteo==8)
+  char c = texto[conteo];
+  Serial.print(c);
+  if(c=='0')
   {
-    if (binario==vacio)
-    {
-      iguales=0;
-      asm volatile ("jmp 0");
-    }
-    char caracter = (char)strtol(binario.c_str(), NULL, 2);
-    Serial.println(caracter); 
-    tiempo=millis()-t0;
-    t2=estimacionfinal*3;
-    acomodo=t2-tiempo;
-    //Serial.println(tiempo);
-    //Serial.println(t2);
-    Serial.print("Acomodo:");
-    Serial.println(acomodo);
-    //digitalWrite(Sincro, HIGH),
-    //delay(acomodo);
-    //digitalWrite(Sincro, LOW);
-    if(acomodo>0){//delay(acomodo);
-    }
-    conteo=0;
-    binario="";
-    } 
-  delay(estimacionfinal);
-
-  while(lecturas!=5)
+    digitalWrite(led1, LOW);
+  }
+  else
   {
-    //Serial.println(numAct2);
-    numAct1 = analogRead(ldrPin);
-    if (numAct1>numAnt1+umbral){numBin1=1;}
-    if (numAct1<numAnt1-umbral){numBin1=0;}
-    numAnt1=numAct1;
-    unsigned long t0 = millis();
-    while(numBin1==1 && (lecturas==0 || lecturas==2 || lecturas==4))
-    {
-      numAct1 = analogRead(ldrPin);
-      //Serial.print("Bit actual:");
-      //Serial.println(numAct1);
-      //Serial.print("Bit anterior:");
-      //Serial.println(numAnt1);
-      //if (numAct1>numAnt1+umbral){}
-      if (numAct1<numAnt1-umbral){cambio=true;}
-      //if (numAct2<numAnt2-umbral){}
-      numAnt1=numAct1;
-      if (cambio==true)
-      {
-        tiempo = millis() - t0;
-        tf1[lecturas]= millis() - t0;
-        Serial.println(tiempo);
-        estimacion = estimacion + K[lecturas] * (tiempo-estimacion);
-        cambio=false;
-        lecturas++;
-        if (lecturas==5)
-        {         
-        Serial.print("Estimación:");
-        Serial.println(estimacion);
-        estimacionfinal=estimacion;
-        delay(estimacionfinal/2);
-        delay(estimacionfinal);
-        umbral=50;
-        }
-      }
-    }
-    //////////////
-    t0 = millis();
-    while(numBin1==0 && (lecturas==1 || lecturas==3))
-    {
-      numAct1 = analogRead(ldrPin);
-      //Serial.print("Bit actual:");
-      //Serial.println(numAct1);
-      //Serial.print("Bit anterior:");
-      //Serial.println(numAnt1);
-      if (numAct1>numAnt1+umbral){cambio=true;}
-      //if (numAct1<numAnt1-umbral){}
-      //if (numAct2>numAnt2+umbral){}
-      numAnt1=numAct1;
-      if (cambio==true){
-        cambio=false;
-        tiempo = millis() - t0;
-        tf1[lecturas]= millis() - t0;
-        Serial.println(tiempo);
-        estimacion = estimacion + K[lecturas] * (tiempo-estimacion);
-        lecturas++;
-      }
-    }
+    digitalWrite(led1, HIGH);
+  }
+  conteo+=1;
+  c = texto[conteo];
+  Serial.print(c);
+  if(c=='0')
+  {
+    digitalWrite(led2, LOW);
+  }
+  else
+  {
+    digitalWrite(led2, HIGH);
+  }
+  delay(espera/2);
+  digitalWrite(sincro, HIGH);
+  delay(espera/5);
+  digitalWrite(sincro, LOW);
+  delay(espera/2);
+  conteo+=1;
+
+  if(conteo >= texto.length() || palabra== "para gil")
+  {
+    digitalWrite(led1, LOW);
+    digitalWrite(led2, LOW);
+    asm volatile ("jmp 0");
   }
 }
