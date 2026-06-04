@@ -4,12 +4,12 @@
 int led1 = 6;
 int led2 = 3;
 int sincro = 7;
-char testeo[] ="10101";
+char testeo[] ="";
 bool pasa= false;
-String texto;
+String texto="";
 int conteo=0;
-String palabra;
-int espera=100;
+String palabra="";
+float espera=100;
 void setup() 
 {
   Serial.println("");
@@ -23,8 +23,8 @@ void setup()
   {
   }
   palabra = Serial.readStringUntil('\n');
-  int cant=palabra.length();
-  char buffer[cant];
+  //int cant=palabra.length();
+  //char buffer[cant];
   //itoa(palabra, buffer, 10);
   for(int i = 0; i < palabra.length(); i++)
   {
@@ -40,8 +40,12 @@ void setup()
 
 void loop() 
 {
-  palabra = Serial.readStringUntil('\n');
-  while(pasa==false)
+  //palabra = Serial.readStringUntil('\n');
+  if(Serial.available())
+  {
+    palabra = Serial.readStringUntil('\n');
+  }
+  /*while(pasa==false)
   {
     char c = testeo[conteo];
     if(c=='0')
@@ -63,9 +67,9 @@ void loop()
       conteo=0;
       pasa=true;
     }
-  }
+  }*/
   char c = texto[conteo];
-  Serial.print(c);
+  Serial.println(c);
   if(c=='0')
   {
     digitalWrite(led1, LOW);
@@ -76,7 +80,7 @@ void loop()
   }
   conteo+=1;
   c = texto[conteo];
-  Serial.print(c);
+  Serial.println(c);
   if(c=='0')
   {
     digitalWrite(led2, LOW);
@@ -85,11 +89,11 @@ void loop()
   {
     digitalWrite(led2, HIGH);
   }
-  delay(espera/2);
+  delay((espera/100)*25);
   digitalWrite(sincro, HIGH);
-  delay(espera/5);
+  delay((espera/100)*50);
   digitalWrite(sincro, LOW);
-  delay(espera/2);
+  delay((espera/100)*25);
   conteo+=1;
 
   if(conteo >= texto.length() || palabra== "para gil")
