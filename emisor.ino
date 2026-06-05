@@ -9,7 +9,7 @@ bool pasa= false;
 String texto="";
 int conteo=0;
 String palabra="";
-float espera=100;
+float espera=50;
 void setup() 
 {
   Serial.println("");
@@ -40,6 +40,8 @@ void setup()
 
 void loop() 
 {
+  Serial.print("LONGITUD=");
+  Serial.println(texto.length());
   //palabra = Serial.readStringUntil('\n');
   if(Serial.available())
   {
@@ -68,6 +70,10 @@ void loop()
       pasa=true;
     }
   }*/
+  if (conteo==0)
+  {
+    delay(2000);
+  }
   char c = texto[conteo];
   Serial.println(c);
   if(c=='0')
@@ -77,7 +83,7 @@ void loop()
   else
   {
     digitalWrite(led1, HIGH);
-  }
+  } 
   conteo+=1;
   c = texto[conteo];
   Serial.println(c);
@@ -93,7 +99,7 @@ void loop()
   digitalWrite(sincro, HIGH);
   delay((espera/100)*50);
   digitalWrite(sincro, LOW);
-  delay((espera/100)*25);
+  delay((espera/100)*25); 
   conteo+=1;
 
   if(conteo >= texto.length() || palabra== "para gil")
