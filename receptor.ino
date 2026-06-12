@@ -34,7 +34,7 @@ unsigned long tiempo;
 bool cambio=false;
 bool cambio2=false;
 int i;
-int lecturas=5;
+int lecturas=0;
 int a=1;
 int b=1;
 unsigned long t0=0;
@@ -48,6 +48,7 @@ void setup() {
 
 void loop() {
   numActSincro=analogRead(sincro);
+  //Serial.println(numActSincro);
   if (numActSincro>numAntSincro+umbral){numBinSincro=1;}
   if (numActSincro<numAntSincro-umbral){numBinSincro=0;}
   numAntSincro=numActSincro;
@@ -61,41 +62,37 @@ void loop() {
     numBin2=0;
   }
 
-  if(numActSincro < 50)
+  if(numActSincro < 70)
   {
       reset = true;
   }
 
   numAct2 = analogRead(ldrPin2);
   numAct1 = analogRead(ldrPin);
-  if (numAct1>50){numBin1=1;}
+  if (numAct1>30){numBin1=1;}
   else{numBin1=0;}
-  if (numAct2>140){numBin2=1;}
-  else{numBin2=0;}
+  if (lecturas==0)
+  {
+    if (numAct2>35){numBin2=1;}
+    else{numBin2=0;}
+  }
+  else
+  {
+      if (numAct2>85){numBin2=1;}
+      else{numBin2=0;}
+  }
   numAnt1=numAct1;
   numAnt2=numAct2;
-  //Serial.println(eravez);
-  if (numActSincro>50 && reset)
+  if (numActSincro>70 && reset)
   {
-    //Serial.print("SYNC=");
-    //Serial.println(numActSincro);
-    //Serial.print("PAR=");
-    //Serial.print(numBin1);
-    //Serial.println(numBin2);
-
-    //Serial.print("A1=");
-    //Serial.print(numAct1);
-    //Serial.print(" A0=");
-    //Serial.priwntln(numAct2); 
-    
     binario += numBin1;
     binario += numBin2;
     conteo+=2;
-
+    lecturas+=1;
     //Serial.print("BIN DESPUES=");
     //Serial.println(binario);
+    
     reset=false;
-    //Serial.println(conteo);
   }
 
   if (conteo==8)
@@ -106,7 +103,6 @@ void loop() {
       }
       //Serial.print("BIN=");
       //Serial.println(binario);
-
       char caracter = (char)strtol(binario.c_str(), NULL, 2);
 
       //Serial.print("CHAR=");
