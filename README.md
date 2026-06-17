@@ -10,7 +10,6 @@ El sistema consiste en:
 
 Este proyecto fue desarrollado como parte de una feria de ciencias, con el objetivo de demostrar cómo la luz visible puede utilizarse como medio de comunicación.
 ## ⚙️ Componentes necesarios
-- Transmisor.
 - 2x Arduino (UNO, Nano, etc.).
 - 1x LED RGB. / 3x LEDs
 - 1x Resistencia (220Ω–330Ω).
