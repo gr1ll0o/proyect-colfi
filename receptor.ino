@@ -23,7 +23,7 @@ const int sincro = A2;
 int numBin1 = 0, numAct1 = 0, numAnt1;
 int numBin2 = 0, numAct2 = 0, numAnt2;
 int numBinSincro = 0, numActSincro = 0, numAntSincro = 0;
-int umbral = 15;
+int umbral = 2;
 
 //Variables string
 String binario;
@@ -35,9 +35,8 @@ bool reset = false;
 int conteo = 0;
 int i;
 int lecturas = 0;
-bool files = true;
+bool files = false;
 bool espera = false;
-int umbralsincro = 20;
 
 void setup() {
   Serial.begin(115200);
@@ -53,52 +52,44 @@ void loop() {
   if (numActSincro>numAntSincro+umbral){numBinSincro=1;}
   if (numActSincro<numAntSincro-umbral){numBinSincro=0;}
   
+  //Serial.println(numBinSincro);
+
   numAntSincro=numActSincro;
   
-  if (numActSincro<umbralsincro)
+  if (numBinSincro==0)
   {
     espera=true;
   }
 
-  if(numActSincro>umbralsincro && espera)
+  if(numBinSincro==1 && espera)
   {
       reset = true;
   }
 
   numAct2 = analogRead(ldrPin2);
   numAct1 = analogRead(ldrPin);
-  //Serial.println(numAct2);
+  //Serial.println(analogRead(ldrPin2));
   
   if (numAct1>numAnt1+umbral){numBin1=1;}
   if (numAct1<numAnt1-umbral){numBin1=0;}
-  if (lecturas==0)
-  {
-    if (numAct2>35){numBin2=1;}
-    else{numBin2=0;}
-  }else
-  {
-      if (numAct2>numAnt2+umbral+15){numBin2=1;}
-      if (numAct2<numAnt2-(umbral-15)){numBin2=0;}
-  }
+
+  if (numAct2>numAnt2+umbral){numBin2=1;}
+  if (numAct2<numAnt2-umbral){numBin2=0;}
   
   numAnt1=numAct1;
   numAnt2=numAct2;
 
-  if (lecturas>0)
-  {
-    umbralsincro=40;
-  }
-
-  if (numActSincro>umbralsincro && reset)
+  if (numBinSincro==1 && reset)
   {
     binario += numBin1;
+    delay(15);
     binario += numBin2;
-    finalbinary += numBin1;
-    finalbinary += numBin2;
+    //finalbinary += numBin1;
+    //finalbinary += numBin2;
     conteo+=2;
     lecturas+=1;
-    //Serial.print("BIN DESPUES=");
-    //Serial.println(binario);  
+    Serial.print("BIN DESPUES=");
+    Serial.println(binario);  
     reset=false;
     espera=false;
   }
@@ -106,7 +97,7 @@ void loop() {
   if (conteo==8)
     {
       char caracter = (char)strtol(binario.c_str(), NULL, 2);
-      //Serial.print(caracter);
+      Serial.print(caracter);
       conteo=0;
       binario="";
     }
