@@ -27,24 +27,20 @@ body, html {
     scroll-behavior: smooth; /* Para el movimiento suave entre secciones */
 }
 
-/* Capa de fondo para el efecto Parallax de puntos */
 #parallax-dots {
     position: fixed;
     top: -5%;
     left: -5%;
     width: 110%;
     height: 110%;
-    /* Patrón de puntos usando gradientes radiales */
     background-image: radial-gradient(rgba(255, 255, 255, 0.4) 1.5px, transparent 1.5px);
     background-size: 25px 25px;
-    /* Máscara para que los puntos solo se vean arriba y se difuminen hacia abajo */
     -webkit-mask-image: radial-gradient(ellipse at top, black 0%, transparent 60%);
     mask-image: radial-gradient(ellipse at top, black 0%, transparent 60%);
     z-index: 0;
     pointer-events: none;
 }
 
-/* Hexágonos decorativos (Simplificados con CSS pseudo-elementos) */
 .hex-bg {
     position: fixed;
     top: 50%;
@@ -59,23 +55,20 @@ body, html {
 .hex-bg.left { left: -100px; }
 .hex-bg.right { right: -100px };
 
-/* Contenedor principal de las secciones */
 .sections-container {
     position: relative;
     z-index: 1;
 }
 
-/* Estilo de cada sección (para probar la navegación) */
 section {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-bottom: 100px; /* Espacio para la barra de navegación */
+    padding-bottom: 100px;
 } 
 
-/* Estilos específicos del Logo */
 .logo-container {
     text-align: center;
     user-select: none;
@@ -93,7 +86,7 @@ section {
 }
 
 .logo .dot {
-    color: #FFD700; /* Punto amarillo */
+    color: #FFD700;
 }
 
 .subtitle {
@@ -103,7 +96,6 @@ section {
     color: #cccccc;
 }
 
-/* Barra de navegación inferior (Dock) */
 .dock {
     position: fixed;
     bottom: 30px;
@@ -119,7 +111,6 @@ section {
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
-/* Íconos del Dock */
 .dock a {
     color: #000000;
     font-size: 1.5rem;
@@ -133,13 +124,11 @@ section {
     border-radius: 50%;
 }
 
-/* Efecto de agrandado al pasar el mouse (Hover) */
 .dock a:hover {
-    transform: scale(1.4); /* Agranda el ícono */
-    color: #444; /* Cambia levemente el color */
+    transform: scale(1.4);
+    color: #444;
 }
 
-/* Puntitos blancos al lado de la barra */
 .dock::before, .dock::after {
     content: '';
     position: absolute;
@@ -199,6 +188,22 @@ img {
 }
 
 #github-link:active {
+    transform: scale(0.9);
+}
+
+#drive-link {
+    margin-left: 30px;
+    width: 250px;
+    height: 250px;
+    margin-top: 30px;
+    transition: all ease-in-out 0.2s;
+}
+
+#drive-link:hover {
+    transform: scale(1.1);
+}
+
+#drive-link:active {
     transform: scale(0.9);
 }
 
