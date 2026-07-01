@@ -3,22 +3,21 @@
 #include <string.h>
 int led1 = 6;
 int led2 = 3;
-int sincro = 5;
+int sincro = 7;
 char testeo[] ="";
 bool pasa= false;
 String texto="";
-String term="";
 String resp="";
 int conteo=0;
 String palabra="";
-float espera=500;
+float espera=5;
 char c[9];
 int bit = 0;
-int a=true;
+bool a=true;
 bool opcion=true;
 void setup() 
 {
-  Serial.println("");
+  //espera*=1000;
   pinMode(led1, OUTPUT);
   pinMode(led2, OUTPUT);
   pinMode(sincro, OUTPUT);
@@ -38,7 +37,6 @@ void setup()
     {
     }
     palabra = Serial.readStringUntil('\n');
-    term=palabra;
   }
   else if(resp=="2"){
     opcion=false;
@@ -50,6 +48,7 @@ void setup()
   }
   else{
     Serial.println("Numero equivocado intente de nuevo");
+    delay(10);
     asm volatile ("jmp 0");
   }
   //int cant=palabra.length();
@@ -61,93 +60,55 @@ void setup()
 void loop() 
 {
     if(a){
+      digitalWrite(led1, HIGH);
+      digitalWrite(led2, HIGH);
       delay(2000);
+      digitalWrite(led1, LOW);
+      digitalWrite(led2, LOW);
       a=false;
     }
-  if(bit == 0 && !opcion)
-  {
-    char letra = palabra[conteo];
 
-    for(int i = 0; i < 8; i++)
-    {
-      c[i] = bitRead(letra, 7 - i) + '0';
-    }
-
-    c[8] = '\0';
-  }
-  //palabra = Serial.readStringUntil('\n');
-  if(Serial.available())
-  {
-    palabra = Serial.readStringUntil('\n');
-  }
-  /*while(pasa==false)
-  {
-    char c = testeo[conteo];
-    if(c=='0')
-    {
-      digitalWrite(led1, LOW);
-    }
+    if(Serial.available()){palabra=Serial.readStringUntil('\n');}
+    char dato;
+    if(opcion){dato=palabra[conteo];}
     else
     {
-      digitalWrite(led1, HIGH);
+      char letra=palabra[conteo];
+      dato=bitRead(letra, 7-bit) ? '1' : '0';
     }
-    Serial.print(c);
-    delay(espera);
-    conteo+=1;
-    if(conteo==5)
+
+    if(dato=='0'){digitalWrite(led1, LOW);}
+    else{digitalWrite(led1, HIGH);}
+    if(opcion){conteo++;}
+    else{bit++;}
+
+    if(opcion){dato = palabra[conteo];}
+    else
+    {
+      char letra=palabra[conteo];
+      dato=bitRead(letra, 7-bit) ? '1' : '0';
+    }
+
+    if(dato == '0'){digitalWrite(led2, LOW);}
+    else{digitalWrite(led2, HIGH);}
+
+    delay((espera/100)*40);
+    digitalWrite(sincro, HIGH);
+    delay((espera/100)*20);
+    digitalWrite(sincro, LOW);
+    delay((espera/100)*40);
+    if(opcion){conteo++;}
+    else{bit++;}
+    if(bit == 8 && !opcion)
+    {
+      bit = 0;
+      conteo++;
+    }
+
+    if(conteo >= palabra.length() || palabra == "para gil")
     {
       digitalWrite(led1, LOW);
       digitalWrite(led2, LOW);
-      Serial.println("");
-      conteo=0;
-      pasa=true;
+      asm volatile ("jmp 0");
     }
-  }*/
-  Serial.println(opcion ? palabra[conteo] : c[bit]);
-  if((opcion ? palabra[conteo] : c[bit]) == '0')
-  {
-    digitalWrite(led1, LOW);
-  }
-  else
-  {
-    digitalWrite(led1, HIGH);
-  }
-  if(opcion){
-    conteo++;
-  }
-  else{
-    bit++;
-  }
-  Serial.println(opcion ? palabra[conteo] : c[bit]);
-  if((opcion ? palabra[conteo] : c[bit]) == '0')
-  {
-    digitalWrite(led2, LOW);
-  }
-  else
-  {
-    digitalWrite(led2, HIGH);
-  }
-  delay((espera/100)*40);
-  digitalWrite(sincro, HIGH);
-  delay((espera/100)*20);
-  digitalWrite(sincro, LOW);
-  delay((espera/100)*40);
-  if(opcion){
-    conteo++;
-  }
-  else{
-    bit++;
-  } 
-  if(bit == 8 && !opcion)
-  {
-    bit = 0;
-    conteo++;
-  }
-
-  if(conteo >= palabra.length() || palabra== "para gil")
-  {
-    digitalWrite(led1, LOW);
-    digitalWrite(led2, LOW);
-    asm volatile ("jmp 0");
-  }
 }
